@@ -37,13 +37,13 @@ export const LoginPage: React.FC = () => {
 
   return (
     <div className="min-h-screen grid grid-cols-1 lg:grid-cols-12 bg-slate-50 font-sans selection:bg-orange-500 selection:text-white">
-      {/* Left Component - Simple Hero Banner */}
-      <div className="lg:col-span-6 xl:col-span-7 flex">
+      {/* Left Component - Hero Banner (Visible on Laptops/Desktops) */}
+      <div className="hidden lg:flex lg:col-span-6 xl:col-span-7">
         <LoginBanner />
       </div>
 
-      {/* Right Component - Simplified Sign In Form */}
-      <div className="lg:col-span-6 xl:col-span-5 flex">
+      {/* Right Component - Sign In Form (Full width on Mobile/Tablet, Right col on Desktop) */}
+      <div className="col-span-1 lg:col-span-6 xl:col-span-5 flex items-center justify-center p-4 sm:p-6 lg:p-12 w-full">
         <LoginForm
           identifier={identifier}
           setIdentifier={setIdentifier}

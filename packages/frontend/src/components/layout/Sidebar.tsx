@@ -16,12 +16,18 @@ import {
   Headphones,
   Landmark,
   Settings,
-  ShieldAlert
+  ShieldAlert,
+  X
 } from 'lucide-react';
 import { useAuthStore } from '../../store/authStore';
 import { UserRole } from '@fintech/shared';
 
-export const Sidebar: React.FC = () => {
+interface SidebarProps {
+  isOpen?: boolean;
+  onClose?: () => void;
+}
+
+export const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
   const { user } = useAuthStore();
 
   const navItems = [
@@ -44,8 +50,38 @@ export const Sidebar: React.FC = () => {
 
   const isAdmin = user?.role === UserRole.SUPER_ADMIN || user?.role === UserRole.ADMIN;
 
+  const handleNavClick = () => {
+    if (onClose) {
+      onClose();
+    }
+  };
+
   return (
-    <aside className="w-64 bg-[#171738] text-slate-300 flex flex-col shrink-0 min-h-screen border-r border-[#232352]">
+    <aside
+      className={`
+        fixed lg:static top-0 bottom-0 left-0 z-50 lg:z-auto
+        w-64 bg-[#171738] text-slate-300 flex flex-col shrink-0 min-h-screen border-r border-[#232352]
+        transition-transform duration-300 ease-in-out shadow-2xl lg:shadow-none
+        ${isOpen ? 'translate-x-0' : '-translate-x-full lg:translate-x-0'}
+      `}
+    >
+      {/* Mobile Drawer Header */}
+      <div className="lg:hidden flex items-center justify-between p-4 border-b border-[#232352] bg-[#12122d]">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-lg bg-orange-500 flex items-center justify-center text-white font-black text-base">
+            M
+          </div>
+          <span className="font-extrabold text-white text-base">MoneyMB Navigation</span>
+        </div>
+        <button
+          onClick={onClose}
+          className="p-1.5 rounded-lg bg-[#232352] text-slate-400 hover:text-white transition"
+          aria-label="Close menu"
+        >
+          <X size={18} />
+        </button>
+      </div>
+
       {/* Navigation List */}
       <div className="flex-1 py-4 px-2 space-y-1 overflow-y-auto">
         {navItems.map((item) => {
@@ -54,8 +90,9 @@ export const Sidebar: React.FC = () => {
             <NavLink
               key={item.name}
               to={item.path}
+              onClick={handleNavClick}
               className={({ isActive }) =>
-                `flex items-center gap-3 px-4 py-2.5 rounded-lg text-xs font-semibold tracking-wide transition-all ${
+                `flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-semibold tracking-wide transition-all ${
                   isActive
                     ? 'bg-gradient-to-r from-purple-700 to-indigo-600 text-white shadow-md font-bold'
                     : 'text-slate-300 hover:bg-[#232352] hover:text-white'
@@ -76,8 +113,9 @@ export const Sidebar: React.FC = () => {
             </div>
             <NavLink
               to="/admin"
+              onClick={handleNavClick}
               className={({ isActive }) =>
-                `flex items-center gap-3 px-4 py-2.5 rounded-lg text-xs font-semibold transition ${
+                `flex items-center gap-3 px-4 py-2.5 rounded-xl text-xs font-semibold transition ${
                   isActive
                     ? 'bg-orange-600 text-white font-bold'
                     : 'text-orange-400 hover:bg-[#232352] hover:text-orange-300'
@@ -104,3 +142,5 @@ export const Sidebar: React.FC = () => {
     </aside>
   );
 };
+
+export default Sidebar;
