@@ -3,7 +3,6 @@ import cors from 'cors';
 import helmet from 'helmet';
 import compression from 'compression';
 import cookieParser from 'cookie-parser';
-import { config } from './config';
 import { errorHandler } from './middlewares/error.middleware';
 import { checkIdempotency } from './middlewares/idempotency.middleware';
 
@@ -49,19 +48,24 @@ export function createApp(): Express {
     });
   });
 
-  // Mount API v1 modules
-  const apiV1 = config.apiPrefix;
-  app.use(`${apiV1}/auth`, authRoutes);
-  app.use(`${apiV1}/wallet`, walletRoutes);
-  app.use(`${apiV1}/dmt`, dmtRoutes);
-  app.use(`${apiV1}/recharge`, rechargeRoutes);
-  app.use(`${apiV1}/bbps`, bbpsRoutes);
-  app.use(`${apiV1}/fastag`, fastagRoutes);
-  app.use(`${apiV1}/aeps`, aepsRoutes);
-  app.use(`${apiV1}/settlement`, settlementRoutes);
-  app.use(`${apiV1}/reports`, reportsRoutes);
-  app.use(`${apiV1}/disputes`, disputesRoutes);
-  app.use(`${apiV1}/admin`, adminRoutes);
+  // Mount API modules on /api/v1, /v1, and /api for seamless frontend compatibility
+  const mountRoutes = (prefix: string) => {
+    app.use(`${prefix}/auth`, authRoutes);
+    app.use(`${prefix}/wallet`, walletRoutes);
+    app.use(`${prefix}/dmt`, dmtRoutes);
+    app.use(`${prefix}/recharge`, rechargeRoutes);
+    app.use(`${prefix}/bbps`, bbpsRoutes);
+    app.use(`${prefix}/fastag`, fastagRoutes);
+    app.use(`${prefix}/aeps`, aepsRoutes);
+    app.use(`${prefix}/settlement`, settlementRoutes);
+    app.use(`${prefix}/reports`, reportsRoutes);
+    app.use(`${prefix}/disputes`, disputesRoutes);
+    app.use(`${prefix}/admin`, adminRoutes);
+  };
+
+  mountRoutes('/api/v1');
+  mountRoutes('/v1');
+  mountRoutes('/api');
 
   // 404 Handler
   app.use('*', (req: Request, res: Response) => {

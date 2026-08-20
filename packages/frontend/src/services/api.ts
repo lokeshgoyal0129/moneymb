@@ -1,8 +1,17 @@
 import axios from 'axios';
 
-const customApiUrl = (import.meta as any).env?.VITE_API_URL;
+const getBaseUrl = () => {
+  const custom = (import.meta as any).env?.VITE_API_URL;
+  if (!custom) return '/api/v1';
+  let clean = custom.replace(/\/$/, '');
+  if (!clean.endsWith('/api/v1') && !clean.endsWith('/v1') && !clean.endsWith('/api')) {
+    clean = `${clean}/api/v1`;
+  }
+  return clean;
+};
+
 export const api = axios.create({
-  baseURL: customApiUrl ? `${customApiUrl.replace(/\/$/, '')}/v1` : '/api/v1',
+  baseURL: getBaseUrl(),
   headers: {
     'Content-Type': 'application/json'
   }
