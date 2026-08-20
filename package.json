@@ -1,0 +1,24 @@
+{
+  "name": "indian-fintech-platform",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Production-grade Indian Fintech & B2B Financial Inclusion Platform (PERN Stack)",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev --workspace=@fintech/backend\" \"npm run dev --workspace=@fintech/frontend\"",
+    "dev:backend": "npm run dev --workspace=@fintech/backend",
+    "dev:frontend": "npm run dev --workspace=@fintech/frontend",
+    "build:shared": "npm run build --workspace=@fintech/shared",
+    "build:backend": "npm run build --workspace=@fintech/backend",
+    "build:frontend": "npm run build --workspace=@fintech/frontend",
+    "build": "npm run build:shared && npm run build:backend && npm run build:frontend",
+    "test": "npm run test --workspaces"
+  },
+  "devDependencies": {
+    "concurrently": "^9.1.2",
+    "rimraf": "^6.0.1",
+    "typescript": "^5.7.3"
+  }
+}
